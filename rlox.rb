@@ -14,6 +14,10 @@ module Lox
     end
   end
 
+  def error line, message
+    report line, "", message
+  end
+
 private
 
   def run_file path
@@ -34,6 +38,11 @@ private
       p token
     end
   end
+
+  def report line, where, message
+    $stderr.puts "[line %{line}] Error%{where}: %{message}" % { line:, where:, message: }
+    @had_error = true
+  end
 end
 
-Lox.main
+Lox.main if $0 == __FILE__
