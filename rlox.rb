@@ -3,6 +3,7 @@ require "readline"
 module Lox
   extend self
 
+  autoload :Scanner, "./scanner"
   autoload :Token, "./token"
 
   def main
