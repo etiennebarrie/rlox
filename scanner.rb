@@ -35,6 +35,14 @@ module Lox
       when "=" then add_token match?("=") ? :EQUAL_EQUAL   : :EQUAL
       when "<" then add_token match?("=") ? :LESS_EQUAL    : :LESS
       when ">" then add_token match?("=") ? :GREATER_EQUAL : :GREATER
+      when "/"
+        if match? "/"
+          advance while peek != "\n" && !end?
+        else
+          add_token :SLASH
+        end
+      when " ", "\r", "\t"
+      when "\n" then new_line
       else
         Lox.error @line, "Unexpected character #{c.inspect}"
       end
@@ -44,6 +52,19 @@ module Lox
       @source[@current].tap do
         @current += 1
       end
+    end
+
+    def peek
+      if end?
+        "\0"
+      else
+        @source[@current]
+      end
+    end
+
+    def new_line
+      @line += 1
+      nil
     end
 
     def match? expected
