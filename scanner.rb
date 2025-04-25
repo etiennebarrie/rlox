@@ -45,7 +45,11 @@ module Lox
       when "\n" then new_line
       when '"' then string
       else
-        Lox.error @line, "Unexpected character #{c.inspect}"
+        if digit? c
+          number
+        else
+          Lox.error @line, "Unexpected character #{c.inspect}"
+        end
       end
     end
 
@@ -60,6 +64,14 @@ module Lox
         "\0"
       else
         @source[@current]
+      end
+    end
+
+    def peek_next
+      if @current + 1 >= @source.size
+        "\0"
+      else
+        @source[@current + 1]
       end
     end
 
@@ -89,6 +101,19 @@ module Lox
       advance # consume closing "
       value = @source[@start + 1...@current - 1]
       add_token :STRING, value
+    end
+
+    def digit? c
+      c.between? "0", "9"
+    end
+
+    def number
+      advance while digit? peek
+      if peek == "." && digit?(peek_next)
+        advance
+        advance while digit? peek
+      end
+      add_token :NUMBER, @source[@start...@current].to_f
     end
   end
 end
