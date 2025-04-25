@@ -11,5 +11,17 @@ module Lox
       %i[ AND CLASS ELSE FALSE FUN FOR IF NIL OR PRINT RETURN SUPER THIS TRUE VAR WHILE ] +
       %i[ EOF ]
     private_constant :TYPES
+
+    def initialize type, lexeme, literal, line
+      raise ArgumentError, "unknown Token type: #{type.inspect}" unless TYPES.include? type
+      @type = type
+      @lexeme = lexeme
+      @literal = literal
+      @line = line
+    end
+
+    def inspect
+      "#<Lox::Token #@type #@lexeme #@literal>"
+    end
   end
 end
