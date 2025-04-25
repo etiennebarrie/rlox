@@ -3,6 +3,8 @@ require "readline"
 module Lox
   extend self
 
+  autoload :Token, "./token"
+
   def main
     if ARGV.size > 1
       $stderr.puts "usage: rlox [script]"
