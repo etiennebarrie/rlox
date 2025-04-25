@@ -10,7 +10,8 @@ module Lox
     def scan
       until end?
         @start = @current
-        yield scan_token
+        token = scan_token
+        yield token if token
       end
       self
     end
@@ -30,6 +31,8 @@ module Lox
       when "+" then add_token :PLUS
       when ";" then add_token :SEMICOLON
       when "*" then add_token :STAR
+      else
+        Lox.error @line, "Unexpected character #{c.inspect}"
       end
     end
 

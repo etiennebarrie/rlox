@@ -45,6 +45,7 @@ private
   def report line, where, message
     $stderr.puts "[line %{line}] Error%{where}: %{message}" % { line:, where:, message: }
     @had_error = true
+    nil
   end
 end
 
