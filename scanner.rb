@@ -47,6 +47,8 @@ module Lox
       else
         if digit? c
           number
+        elsif alpha? c
+          identifier
         else
           Lox.error @line, "Unexpected character #{c.inspect}"
         end
@@ -114,6 +116,41 @@ module Lox
         advance while digit? peek
       end
       add_token :NUMBER, @source[@start...@current].to_f
+    end
+
+    def alpha? c
+      c.between? "a", "z" or c.between? "A", "Z" or c == "_"
+    end
+
+    def alphanumeric? c
+      alpha? c or digit? c
+    end
+
+    IDENTIFIER_TYPE = {
+      "and"    => :AND,
+      "class"  => :CLASS,
+      "else"   => :ELSE,
+      "false"  => :FALSE,
+      "for"    => :FOR,
+      "fun"    => :FUN,
+      "if"     => :IF,
+      "nil"    => :NIL,
+      "or"     => :OR,
+      "print"  => :PRINT,
+      "return" => :RETURN,
+      "super"  => :SUPER,
+      "this"   => :THIS,
+      "true"   => :TRUE,
+      "var"    => :VAR,
+      "while"  => :WHILE,
+    }
+    IDENTIFIER_TYPE.default = :IDENTIFIER
+    private_constant :IDENTIFIER_TYPE
+
+    def identifier
+      advance while alphanumeric? peek
+      text = @source[@start...@current]
+      add_token IDENTIFIER_TYPE[text]
     end
   end
 end
