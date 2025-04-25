@@ -31,6 +31,10 @@ module Lox
       when "+" then add_token :PLUS
       when ";" then add_token :SEMICOLON
       when "*" then add_token :STAR
+      when "!" then add_token match?("=") ? :BANG_EQUAL    : :BANG
+      when "=" then add_token match?("=") ? :EQUAL_EQUAL   : :EQUAL
+      when "<" then add_token match?("=") ? :LESS_EQUAL    : :LESS
+      when ">" then add_token match?("=") ? :GREATER_EQUAL : :GREATER
       else
         Lox.error @line, "Unexpected character #{c.inspect}"
       end
@@ -40,6 +44,13 @@ module Lox
       @source[@current].tap do
         @current += 1
       end
+    end
+
+    def match? expected
+      return false if end?
+      return false if @source[@current] != expected
+      @current += 1
+      true
     end
 
     def add_token type, literal = nil
