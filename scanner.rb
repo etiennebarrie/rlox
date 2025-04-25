@@ -43,6 +43,7 @@ module Lox
         end
       when " ", "\r", "\t"
       when "\n" then new_line
+      when '"' then string
       else
         Lox.error @line, "Unexpected character #{c.inspect}"
       end
@@ -77,6 +78,17 @@ module Lox
     def add_token type, literal = nil
       text = @source[@start...@current]
       Token.new type, text, literal, @line
+    end
+
+    def string
+      while peek != '"' && !end?
+        new_line if peek == "\n"
+        advance
+      end
+      Lox.error @line, "Unterminated string: #{@source[@start..]}" if end?
+      advance # consume closing "
+      value = @source[@start + 1...@current - 1]
+      add_token :STRING, value
     end
   end
 end
