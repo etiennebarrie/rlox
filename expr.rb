@@ -6,5 +6,9 @@ module Lox
     Grouping = define :expression
     Literal  = define :value
     Unary    = define :operator, :right
+
+    def accept visitor
+      visitor.public_send :"visit_#{self.class.name.delete_prefix "Lox::Expr::"}", self
+    end
   end
 end
