@@ -3,6 +3,8 @@ require "readline"
 module Lox
   extend self
 
+  autoload :AstPrinter, "./ast_printer"
+  autoload :Expr, "./expr"
   autoload :Scanner, "./scanner"
   autoload :Token, "./token"
 
