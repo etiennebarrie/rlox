@@ -5,6 +5,7 @@ module Lox
 
   autoload :AstPrinter, "./ast_printer"
   autoload :Expr, "./expr"
+  autoload :Parser, "./parser"
   autoload :Scanner, "./scanner"
   autoload :Token, "./token"
 
@@ -23,6 +24,14 @@ module Lox
     report line, "", message
   end
 
+  def parser_error token, message
+    if token.type == :EOF
+      report token.line, " at end", message
+    else
+      report token.line, " at '#{token.lexeme}'", message
+    end
+  end
+
 private
 
   def run_file path
@@ -39,9 +48,10 @@ private
   def run source
     @had_error = false
     scanner = Scanner.new source
-    scanner.scan do |token|
-      p token
-    end
+    parser = Parser.new scanner.scan.to_a
+    expression = parser.parse
+    return if @had_error
+    puts AstPrinter.new.print expression
   end
 
   def report line, where, message

@@ -8,11 +8,13 @@ module Lox
     end
 
     def scan
+      return to_enum __method__ unless block_given?
       until end?
         @start = @current
         token = scan_token
         yield token if token
       end
+      yield add_token :EOF
       self
     end
 

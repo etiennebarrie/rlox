@@ -20,7 +20,7 @@ module Lox
       @line = line
     end
 
-    attr_reader :lexeme
+    attr_reader :type, :lexeme, :literal, :line
 
     def inspect
       "#<Lox::Token #@type #@lexeme #@literal>"
