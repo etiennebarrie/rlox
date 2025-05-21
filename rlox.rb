@@ -33,14 +33,22 @@ module Lox
     end
   end
 
+  def runtime_error error
+    puts "#{error.message}\n[line #{error.token.line}]"
+    @had_runtime_error = true
+  end
+
 private
 
   def run_file path
+    @interpreter = Interpreter.new
     run File.read path
     exit 65 if @had_error
+    exit 70 if @had_runtime_error
   end
 
   def run_prompt
+    @interpreter = Interpreter.new
     while line = Readline.readline "> " do
       run line
     end
@@ -52,7 +60,7 @@ private
     parser = Parser.new scanner.scan.to_a
     expression = parser.parse
     return if @had_error
-    puts AstPrinter.new.print expression
+    @interpreter.interpret expression
   end
 
   def report line, where, message

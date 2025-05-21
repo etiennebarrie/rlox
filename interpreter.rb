@@ -1,5 +1,12 @@
 module Lox
   class Interpreter
+    def interpret expression
+      value = evaluate expression
+      puts stringify value
+    rescue RuntimeError => error
+      Lox.runtime_error error
+    end
+
     def visit_Literal literal
       literal.value
     end
@@ -71,6 +78,15 @@ module Lox
 
     def evaluate expr
       expr.accept self
+    end
+
+    def stringify value
+      case value
+      when Numeric
+        value.to_s.delete_suffix ".0"
+      else
+        value.to_s
+      end
     end
 
     def check_number_operand operator, operand
