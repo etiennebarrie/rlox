@@ -5,6 +5,7 @@ module Lox
 
   autoload :AstPrinter, "./ast_printer"
   autoload :Expr, "./expr"
+  autoload :Interpreter, "./interpreter"
   autoload :Parser, "./parser"
   autoload :Scanner, "./scanner"
   autoload :Token, "./token"
