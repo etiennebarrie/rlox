@@ -9,6 +9,7 @@ module Lox
   autoload :Interpreter, "./interpreter"
   autoload :Parser, "./parser"
   autoload :Scanner, "./scanner"
+  autoload :Stmt, "./stmt"
   autoload :Token, "./token"
 
   def main
