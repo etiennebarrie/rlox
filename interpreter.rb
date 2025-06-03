@@ -1,8 +1,10 @@
 module Lox
   class Interpreter
-    def interpret expression
-      value = evaluate expression
-      puts stringify value
+    def interpret statements
+      statements.each do |statement|
+        execute statement
+      end
+      self
     rescue RuntimeError => error
       Lox.runtime_error error
     end
@@ -65,6 +67,16 @@ module Lox
       end
     end
 
+    def visit_Expression stmt
+      evaluate stmt.expression
+      nil
+    end
+
+    def visit_Print stmt
+      p evaluate stmt.expression
+      nil
+    end
+
     class RuntimeError < StandardError
       def initialize token, message
         @token = token
@@ -79,6 +91,7 @@ module Lox
     def evaluate expr
       expr.accept self
     end
+    alias_method :execute, :evaluate
 
     def stringify value
       case value
