@@ -9,11 +9,35 @@ module Lox
     end
 
     def parse
-      expression
+      statements = []
+      until end?
+        statements << statement
+      end
+      statements
     rescue ParseError
     end
 
   private
+
+    def statement
+      if match? :PRINT
+        print_statement
+      else
+        expression_statement
+      end
+    end
+
+    def print_statement
+      value = expression
+      consume :SEMICOLON, "Expect ';' after value."
+      Stmt::Print.new value
+    end
+
+    def expression_statement
+      expr = expression
+      consume :SEMICOLON, "Expect ';' after expression."
+      Stmt::Expression.new expr
+    end
 
     def expression = equality
 
