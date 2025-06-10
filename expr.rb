@@ -6,5 +6,6 @@ module Lox
     Grouping = define :expression
     Literal  = define :value
     Unary    = define :operator, :right
+    Variable = define :name
   end
 end

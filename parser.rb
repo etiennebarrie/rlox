@@ -11,13 +11,30 @@ module Lox
     def parse
       statements = []
       until end?
-        statements << statement
+        statements << declaration
       end
       statements
     rescue ParseError
     end
 
   private
+
+    def declaration
+      if match? :VAR
+        var_declaration
+      else
+        statement
+      end
+    rescue ParseError
+      synchronize
+    end
+
+    def var_declaration
+      name = consume :IDENTIFIER, "Expect variable name."
+      initializer = expression if match? :EQUAL
+      consume :SEMICOLON, "Expect ';' after variable declaration."
+      Stmt::Var.new name, initializer
+    end
 
     def statement
       if match? :PRINT
@@ -95,6 +112,7 @@ module Lox
       return Expr::Literal.new true if match? :TRUE
       return Expr::Literal.new nil if match? :NIL
       return Expr::Literal.new previous.literal if match? :NUMBER, :STRING
+      return Expr::Variable.new previous if match? :IDENTIFIER
       if match? :LEFT_PAREN
         expr = expression
         consume :RIGHT_PAREN, "Expect ')' after expression."
