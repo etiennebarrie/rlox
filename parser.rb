@@ -56,7 +56,21 @@ module Lox
       Stmt::Expression.new expr
     end
 
-    def expression = equality
+    def expression = assignment
+
+    def assignment
+      expr = equality
+      if match? :EQUAL
+        equals = previous
+        value = assignment
+        if Expr::Variable === expr
+          name = expr.name
+          return Expr::Assign.new name, value
+        end
+        error equals, "Invalid assignment target."
+      end
+      expr
+    end
 
     def equality
       expr = comparison

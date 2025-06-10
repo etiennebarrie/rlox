@@ -8,6 +8,14 @@ module Lox
       @values[name] = value
     end
 
+    def []= name, value
+      if @values.key? name.lexeme
+        @values[name.lexeme] = value
+      else
+        raise Interpreter::RuntimeError.new name, "Undefined variable '#{name.lexeme}'."
+      end
+    end
+
     def [] name
       @values.fetch name.lexeme do
         raise Interpreter::RuntimeError.new name, "Undefined variable '#{name.lexeme}'."
