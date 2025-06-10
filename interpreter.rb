@@ -1,5 +1,11 @@
 module Lox
   class Interpreter
+    def initialize
+      @environment = Environment.new
+    end
+
+    attr_reader :globals
+
     def interpret statements
       statements.each do |statement|
         execute statement
@@ -75,6 +81,15 @@ module Lox
     def visit_Print stmt
       p evaluate stmt.expression
       nil
+    end
+
+    def visit_Var stmt
+      value = evaluate stmt.initializer if stmt.initializer
+      @environment.declare stmt.name.lexeme, value
+    end
+
+    def visit_Variable expr
+      @environment[expr.name]
     end
 
     class RuntimeError < StandardError
