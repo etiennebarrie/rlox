@@ -97,6 +97,12 @@ module Lox
       @environment[expr.name]
     end
 
+    def visit_Block stmt
+      environment = Environment.new @environment
+      execute_block stmt.statements, environment
+      nil
+    end
+
     class RuntimeError < StandardError
       def initialize token, message
         @token = token
@@ -112,6 +118,16 @@ module Lox
       expr.accept self
     end
     alias_method :execute, :evaluate
+
+    def execute_block statements, environment
+      previous = @environment
+      @environment = environment
+      statements.each do |statement|
+        execute statement
+      end
+    ensure
+      @environment = previous
+    end
 
     def stringify value
       case value

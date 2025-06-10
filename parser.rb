@@ -39,6 +39,8 @@ module Lox
     def statement
       if match? :PRINT
         print_statement
+      elsif match? :LEFT_BRACE
+        Stmt::Block.new block
       else
         expression_statement
       end
@@ -48,6 +50,15 @@ module Lox
       value = expression
       consume :SEMICOLON, "Expect ';' after value."
       Stmt::Print.new value
+    end
+
+    def block
+      statements = []
+      until check? :RIGHT_BRACE or end?
+        statements << declaration
+      end
+      consume :RIGHT_BRACE, "Expect '}' after block."
+      statements
     end
 
     def expression_statement
