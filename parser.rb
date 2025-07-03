@@ -81,7 +81,7 @@ module Lox
     def expression = assignment
 
     def assignment
-      expr = equality
+      expr = logic_or
       if match? :EQUAL
         equals = previous
         value = assignment
@@ -90,6 +90,26 @@ module Lox
           return Expr::Assign.new name, value
         end
         error equals, "Invalid assignment target."
+      end
+      expr
+    end
+
+    def logic_or
+      expr = logic_and
+      while match? :OR
+        operator = previous
+        right = logic_and
+        expr = Expr::Logical.new expr, operator, right
+      end
+      expr
+    end
+
+    def logic_and
+      expr = equality
+      while match? :AND
+        operator = previous
+        right = equality
+        expr = Expr::Logical.new expr, operator, right
       end
       expr
     end

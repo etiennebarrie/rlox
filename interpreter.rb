@@ -19,6 +19,13 @@ module Lox
       literal.value
     end
 
+    def visit_Logical logical
+      left = evaluate logical.left
+      return left if logical.operator.type == :OR && left
+      return left if logical.operator.type == :AND && !left
+      evaluate logical.right
+    end
+
     def visit_Grouping grouping
       evaluate grouping.expression
     end

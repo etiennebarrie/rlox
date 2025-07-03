@@ -6,6 +6,7 @@ module Lox
     Binary   = define :left, :operator, :right
     Grouping = define :expression
     Literal  = define :value
+    Logical  = define :left, :operator, :right
     Unary    = define :operator, :right
     Variable = define :name
   end
