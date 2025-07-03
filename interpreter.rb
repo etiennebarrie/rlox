@@ -78,6 +78,15 @@ module Lox
       nil
     end
 
+    def visit_If stmt
+      if evaluate stmt.condition
+        execute stmt.then_branch
+      elsif stmt.else_branch
+        execute stmt.else_branch
+      end
+      nil
+    end
+
     def visit_Print stmt
       p evaluate stmt.expression
       nil

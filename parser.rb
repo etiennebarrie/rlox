@@ -37,13 +37,24 @@ module Lox
     end
 
     def statement
-      if match? :PRINT
+      if match? :IF
+        if_statement
+      elsif match? :PRINT
         print_statement
       elsif match? :LEFT_BRACE
         Stmt::Block.new block
       else
         expression_statement
       end
+    end
+
+    def if_statement
+      consume :LEFT_PAREN, "Expect '(' after 'if'."
+      condition = expression
+      consume :RIGHT_PAREN, "Expect ')' after if condition."
+      then_branch = statement
+      else_branch = statement if match? :ELSE
+      Stmt::If.new condition, then_branch, else_branch
     end
 
     def print_statement
