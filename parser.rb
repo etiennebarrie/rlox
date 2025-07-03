@@ -43,6 +43,8 @@ module Lox
         print_statement
       elsif match? :WHILE
         while_statement
+      elsif match? :FOR
+        for_statement
       elsif match? :LEFT_BRACE
         Stmt::Block.new block
       else
@@ -71,6 +73,29 @@ module Lox
       consume :RIGHT_PAREN, "Expect ')' after while condition."
       body = statement
       Stmt::While.new condition, body
+    end
+
+    def for_statement
+      consume :LEFT_PAREN, "Expect '(' after 'for'."
+      if match? :SEMICOLON
+      elsif match? :VAR
+        initializer = var_declaration
+      else
+        initializer = expression
+      end
+      condition = expression unless check? :SEMICOLON
+      consume :SEMICOLON, "Expect ';' after loop condition."
+      increment = expression unless check? :RIGHT_PAREN
+      consume :RIGHT_PAREN, "Expect ')' after for clauses."
+      body = statement
+      if increment
+        increment = Stmt::Expression.new increment
+        body = Stmt::Block.new [body, increment]
+      end
+      condition ||= Expr::Literal.new true
+      body = Stmt::While.new condition, body
+      body = Stmt::Block.new [initializer, body] if initializer
+      body
     end
 
     def block
