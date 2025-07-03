@@ -7,5 +7,6 @@ module Lox
     If         = define :condition, :then_branch, :else_branch
     Print      = define :expression
     Var        = define :name, :initializer
+    While      = define :condition, :body
   end
 end

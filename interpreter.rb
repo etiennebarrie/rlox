@@ -104,6 +104,13 @@ module Lox
       @environment.declare stmt.name.lexeme, value
     end
 
+    def visit_While stmt
+      while evaluate stmt.condition
+        execute stmt.body
+      end
+      nil
+    end
+
     def visit_Assign expr
       value = evaluate expr.value
       @environment[expr.name] = value

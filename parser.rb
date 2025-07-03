@@ -41,6 +41,8 @@ module Lox
         if_statement
       elsif match? :PRINT
         print_statement
+      elsif match? :WHILE
+        while_statement
       elsif match? :LEFT_BRACE
         Stmt::Block.new block
       else
@@ -61,6 +63,14 @@ module Lox
       value = expression
       consume :SEMICOLON, "Expect ';' after value."
       Stmt::Print.new value
+    end
+
+    def while_statement
+      consume :LEFT_PAREN, "Expect '(' after 'while'."
+      condition = expression
+      consume :RIGHT_PAREN, "Expect ')' after while condition."
+      body = statement
+      Stmt::While.new condition, body
     end
 
     def block
