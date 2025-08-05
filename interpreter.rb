@@ -1,7 +1,15 @@
 module Lox
   class Interpreter
+    module Clock extend self
+      def arity = 0
+      def call(interpreter) = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_second)
+      def inspect = "<native fn clock>"
+    end
+
     def initialize
-      @environment = Environment.new
+      @globals = Environment.new
+      @globals.declare "clock", Clock
+      @environment = globals
     end
 
     attr_reader :globals

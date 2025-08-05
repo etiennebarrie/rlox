@@ -1,0 +1,3 @@
+var before = clock();
+print clock() - before;
+print clock;
