@@ -60,6 +60,8 @@ module Lox
         if_statement
       elsif match? :PRINT
         print_statement
+      elsif match? :RETURN
+        return_statement
       elsif match? :WHILE
         while_statement
       elsif match? :FOR
@@ -84,6 +86,16 @@ module Lox
       value = expression
       consume :SEMICOLON, "Expect ';' after value."
       Stmt::Print.new value
+    end
+
+    def return_statement
+      keyword = previous
+      value = nil
+      unless check? :SEMICOLON
+        value = expression
+      end
+      consume :SEMICOLON, "Expect ';' after return value."
+      Stmt::Return.new keyword, value
     end
 
     def while_statement
