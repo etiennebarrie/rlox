@@ -1,11 +1,12 @@
 module Lox
   class Function
-    def initialize declaration
+    def initialize declaration, closure
       @declaration = declaration
+      @closure = closure
     end
 
     def call interpreter, *arguments
-      environment = Environment.new interpreter.globals
+      environment = Environment.new @closure
       argument_with_names = @declaration.params.zip arguments
       argument_with_names.each do |param, argument|
         environment.declare param.lexeme, argument

@@ -102,7 +102,7 @@ module Lox
     end
 
     def visit_Function stmt
-      function = Function.new stmt
+      function = Function.new stmt, @environment
       @environment.declare stmt.name.lexeme, function
       nil
     end
