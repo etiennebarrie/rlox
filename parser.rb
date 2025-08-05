@@ -22,11 +22,30 @@ module Lox
     def declaration
       if match? :VAR
         var_declaration
+      elsif match? :FUN
+        function "function"
       else
         statement
       end
     rescue ParseError
       synchronize
+    end
+
+    def function kind
+      name = consume :IDENTIFIER, "Expect #{kind} name."
+      consume :LEFT_PAREN, "Expect '(' after #{kind} name."
+      params = []
+      unless check? :RIGHT_PAREN
+        begin
+          error peek, "Can't have more than 255 parameters." if params.size >= 255
+          param = consume :IDENTIFIER, "Expect parameter name."
+          params << param
+        end while match? :COMMA
+      end
+      consume :RIGHT_PAREN, "Expect ')' after parameters."
+      consume :LEFT_BRACE, "Expect '{' before #{kind} body"
+      body = block
+      Stmt::Function.new name, params, body
     end
 
     def var_declaration
