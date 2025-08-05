@@ -195,7 +195,27 @@ module Lox
         right = unary
         return Expr::Unary.new operator, right
       end
-      primary
+      call
+    end
+
+    def call
+      expr = primary
+      if match? :LEFT_PAREN
+        args = arguments
+        paren = consume :RIGHT_PAREN, "Expect ')' after arguments."
+        expr = Expr::Call.new expr, paren, args
+      end
+      expr
+    end
+
+    def arguments
+      return [] if check? :RIGHT_PAREN
+      args = [expression]
+      while match? :COMMA
+        error peek, "Can't have more than 255 arguments." if args.size >= 255
+        args << expression
+      end
+      args
     end
 
     def primary

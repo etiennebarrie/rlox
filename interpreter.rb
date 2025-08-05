@@ -80,6 +80,14 @@ module Lox
       end
     end
 
+    def visit_Call call
+      callee = evaluate call.callee
+      arguments = call.arguments.map { evaluate it }
+      raise RuntimeError.new call.paren, "Can only call functions and classes." unless callee.respond_to? :call
+      raise RuntimeError.new call.paren, "Expected #{callee.arity} arguments but got #{arguments.size}." unless callee.arity == arguments.size
+      callee.call self, *arguments
+    end
+
     def visit_Expression stmt
       evaluate stmt.expression
       nil
