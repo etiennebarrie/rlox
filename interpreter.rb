@@ -158,7 +158,7 @@ module Lox
     end
     alias_method :execute, :evaluate
 
-    def execute_block statements, environment
+    public def execute_block statements, environment
       previous = @environment
       @environment = environment
       statements.each do |statement|
