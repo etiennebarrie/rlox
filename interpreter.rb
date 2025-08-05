@@ -101,6 +101,12 @@ module Lox
       nil
     end
 
+    def visit_Function stmt
+      function = Function.new stmt
+      @environment.declare stmt.name.lexeme, function
+      nil
+    end
+
     def visit_If stmt
       if evaluate stmt.condition
         execute stmt.then_branch
