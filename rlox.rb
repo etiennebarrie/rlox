@@ -10,6 +10,7 @@ module Lox
   autoload :Function, "./function"
   autoload :Interpreter, "./interpreter"
   autoload :Parser, "./parser"
+  autoload :Return, "./return"
   autoload :Scanner, "./scanner"
   autoload :Stmt, "./stmt"
   autoload :Token, "./token"

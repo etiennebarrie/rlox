@@ -121,6 +121,11 @@ module Lox
       nil
     end
 
+    def visit_Return stmt
+      value = evaluate stmt.value if stmt.value
+      raise Return.new value
+    end
+
     def visit_Var stmt
       value = evaluate stmt.initializer if stmt.initializer
       @environment.declare stmt.name.lexeme, value

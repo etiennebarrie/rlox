@@ -12,6 +12,8 @@ module Lox
       end
       interpreter.execute_block @declaration.body, environment
       nil
+    rescue Return => retval
+      retval.value
     end
 
     def arity = @declaration.params.size
